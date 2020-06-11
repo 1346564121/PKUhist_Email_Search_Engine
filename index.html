@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="shortcut icon" href="https://www.easyicon.net/api/resizeApi.php?id=1187384&size=128">
+    <title>PKUhist Helper-查询教师邮箱</title>
+    <style type="text/css">
+        *{
+          -webkit-user-select: auto;
+        }
+    </style>
+</head>
+<body style="background-color: WhiteSmoke;font-family: Georgia, KaiTi;">
+    <div class="container-fluid" style="margin-top: 20vh;">
+        <h1 class="text-center">PKUhist Helper</h1>
+        <h3 class="text-center">教师邮箱查询助手</h3>
+        <br>
+        <div class="input-group col-md-3" style="margin:0 auto">
+            <input type="text" id="name" placeholder="请输入老师姓名" class="form-control">
+            <span class="input-group-btn">
+                <input value="查询" type="submit" onclick="findEmail()" class="btn btn-info btn-search" style="margin-left:3px;margin-bottom: 5px;width:60px">
+            </span>
+            <br>
+        </div>
+        <br>
+        <div style="text-align: center">
+            <div id="result1" style="display: inline;"></div>
+            <div id="result2" style="display: inline;"></div>
+        </div>
+        <br>
+        <button id="copyBT" class="btn btn-default" style="display:none;">复制邮箱</button>
+        <!-- 电子书/论文网站导航 点击这里 -->
+    </div>
+    <script>
+        // 默认聚焦于输入栏
+        document.getElementById("name").focus();
+        
+        // 教师邮箱数据库
+        const dataObject = {
+            李志生:"lizhisheng1988@126.com",
+            高岱:"gaodai@pku.edu.cn",
+            郭润涛:"guo_runtao@pku.edu.cn",
+            王利军:"ljw@pku.edu.cn",
+            辛德勇:"pkuxindeyong@gmail.com",
+            丁一川:"dingyc@vip.sina.com",
+            朱凤瀚:"zhufenghanbd@126.com",
+            李新峰:"lixf@pku.edu.cn",
+            李伯重:"libzh@pku.edu.cn",
+            李维:"liwei-history@pku.edu.cn",
+            何晋:"hejin@pku.edu.cn",
+            王立新:"wanglx@pku.edu.cn",
+            朱孝远:"zhupku@hotmail.com",
+            许平:"xup@pku.edu.cn",
+            法恩瑞:"enricofardella@pku.edu.cn",
+            黄春高:"hchungao@pku.edu.cn",
+            唐利国:"1406174395@pku.edu.cn",
+            徐健:"xujian_pku@sina.com",
+            颜海英:"yanhaiying@pku.edu.cn",
+            李金东:"lijindong@pku.edu.cn",
+            庄宇:"zhuangyu.tanya@pku.edu.cn",
+            钱乘旦:"chdqian@pku.edu.cn",
+            高毅:"gy@pku.edu.cn",
+            郭卫东:"gwd@pku.edu.cn",
+            陈苏镇:"chensz@pku.edu.cn",
+            邓小南:"ld@pku.edu.cn",
+            王元周:"wangyuanzhou@hotmail.com",
+            欧阳哲生:"zsoy2004@163.com",
+            王新生:"wangxs@pku.edu.cn",
+            张新刚:"zhxg@pku.edu.cn",
+            韩策:"hance@pku.edu.cn",
+            包茂红:"baomh616@pku.edu.cn",
+            苗思安:"msa@pku.edu.cn",
+            潘华琼:"panhq@pku.edu.cn",
+            阎步克:"yanbuke@pku.edu.cn",
+            朱青生:"laozhu@pku.edu.cn",
+            拱玉书:"yshgong@pku.edu.cn",
+            叶炜:"yewei@pku.edu.cn",
+            史睿:"shirui@pku.edu.cn",
+            罗新:"luoxin@pku.edu.cn",
+            韩巍:"hanwei@pku.edu.cn",
+            陆扬:"luyangpku@pku.edu.cn",
+            叶纯芳:"yehchunfang@pku.edu.cn",
+            陈侃理:"ckl@pku.edu.cn",
+            刘晨:"sbdzliuchen@126.com",
+            王铿:"wangkeng@pku.edu.cn",
+            赵世瑜:"twizsy1959@hotmail.com",
+            王立新:"wanglx@pku.edu.cn",
+            金东吉:"dgkim@pku.edu.cn",
+            吴小安:"wu2@pku.edu.cn",
+            昝涛:"zantao@pku.edu.cn",
+            张雄:"zhxiong@pku.edu.cn",
+            王忠立:"hisjwb@pku.edu.cn",
+            李隆国:"llguo@pku.edu.cn",
+            彭小瑜:"jeromepku@163.com",
+            张静:"hiszj@126.com",
+            刘一皋:"liuyigao@pku.edu.cn",
+            王奇生:"wangqs@pku.edu.cn;13621125453@163.com",
+            尚小明:"bdssm@126.com;sxm@pku.edu.cn",
+            张帆:"zhangfanbd@263.net",
+            赵冬梅:"pkuzhaotong@vip.sina.com.cn;zdm8821022@yahoo.com.cn",
+            毛亦可:"maoyike@pku.edu.cn",
+            朱玉麟:"zyq001@pku.edu.cn;serindia@263.net",
+            李霖:"radiohead@pku.edu.cn",
+            牛大勇:"ndy@pku.edu.cn",
+            刘俊文:"eruson@yahoo.com.cn",
+            臧健:"pz@pku.edu.cn",
+            吴宗国:"wuzongguo@sinoss.com",
+            蒋非非:"jiangff@mail.china.com",
+            张希清:"zhxq@pku.edu.cn",
+            王小甫:"xiaofuw@pku.edu.cn",
+            李孝聪:"lixc@pku.edu.cn;lixcpku@hotmail.com",
+            郑必俊:"zbj1102@sina.com.cn",
+            荣新江:"rxj@pku.edu.cn",
+            林丽娟:"lijuanlin@pku.edu.cn",
+            牛可:"niuke@pku.edu.cn",
+            王希:"wx15701@pku.edu.cn;wangxi@iup.edu",
+            崇明:"chongming@pku.edu.cn",
+            董经胜:"djsss@pku.edu.cn",
+            臧运祜:"zangyh@pku.edu.cn",
+            程炜:"cheng.wei@pku.edu.cn",
+            党宝海:"dangbh@pku.edu.cn",
+            范韦里克:"hamvanwijlick@pku.edu.cn"
+        }
+
+        // 查找教授邮箱函数
+        function findEmail(){
+            let result1 = document.getElementById("result1");
+            let result2 = document.getElementById("result2");
+            let name = document.getElementById("name").value;
+            let email1;
+            let email2 = "";
+            for(var key in dataObject){
+                if(name == key){
+                    email1 = `${name}老师的邮箱是:`;
+                    email2 = dataObject[key];
+                    document.getElementById("copyBT").style.display = "block";
+                    document.getElementById("copyBT").style.margin = "0 auto";
+                    break;
+                }else if(name == ""){
+                    email1 = "您还没有输入老师姓名！";
+                    document.getElementById("copyBT").style.display = "none";
+                }else{
+                    email1 = name + "老师的邮箱尚未收录或者不是本系老师";
+                    document.getElementById("copyBT").style.display = "none";
+                } 
+            }
+            result1.innerHTML = email1;
+            result2.innerHTML = email2;
+        };
+
+        // 实现按下enter键直接返回结果
+        document.onkeydown = function(event){
+            var e = event || window.event;
+            if (e && e.keyCode == 13){
+                findEmail();
+            }
+        }
+
+        function copyArticle(event) {
+            let name = document.getElementById("name").value;
+            const range = document.createRange();
+            range.selectNode(document.getElementById('result2'));
+            const selection = window.getSelection();
+            if(selection.rangeCount > 0) selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand('copy');
+            alert(`${name}老师的邮箱复制成功！`);
+        }
+        document.getElementById('copyBT').addEventListener('click', copyArticle, false);
+    </script>
+</body>
+</html>
